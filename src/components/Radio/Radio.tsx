@@ -43,6 +43,7 @@ const Radio: React.FC<RadioProps> = (props: RadioProps) => {
   return (
     <Tappable
       Component="label"
+      role={null} // reset default Tappable role
       style={style}
       className={className}
       vkuiClass={classNames(
