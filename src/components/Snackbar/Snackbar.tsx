@@ -5,11 +5,7 @@ import { HasPlatform } from "../../types";
 import { getClassName } from "../../helpers/getClassName";
 import { ANDROID, VKCOM } from "../../lib/platform";
 import { rubber } from "../../lib/touch";
-import {
-  withAdaptivity,
-  AdaptivityProps,
-  ViewWidth,
-} from "../../hoc/withAdaptivity";
+import { withAdaptivity, AdaptivityProps } from "../../hoc/withAdaptivity";
 import Text from "../Typography/Text/Text";
 import Button from "../Button/Button";
 import { AppRootPortal } from "../AppRoot/AppRootPortal";
@@ -61,7 +57,7 @@ const SnackbarComponent: React.FC<SnackbarProps> = (props: SnackbarProps) => {
     action,
     before,
     after,
-    viewWidth,
+    isDesktop,
     duration,
     onActionClick,
     onClose,
@@ -85,7 +81,6 @@ const SnackbarComponent: React.FC<SnackbarProps> = (props: SnackbarProps) => {
     typeof requestAnimationFrame
   > | null>(null);
 
-  const isDesktop = viewWidth >= ViewWidth.SMALL_TABLET;
   const transitionFinishDurationFallback =
     platform === ANDROID || platform === VKCOM ? 400 : 320;
 
@@ -245,5 +240,5 @@ SnackbarComponent.defaultProps = {
 };
 
 export const Snackbar = withAdaptivity(SnackbarComponent, {
-  viewWidth: true,
+  isDesktop: true,
 });

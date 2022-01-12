@@ -226,6 +226,7 @@ class Alert extends React.Component<AlertProps, AlertState> {
       style,
       platform,
       viewWidth,
+      isDesktop,
       text,
       header,
       ...restProps
@@ -237,7 +238,6 @@ class Alert extends React.Component<AlertProps, AlertState> {
     const canShowCloseButton =
       platform === VKCOM ||
       (platform === ANDROID && viewWidth >= ViewWidth.SMALL_TABLET);
-    const isDesktop = viewWidth >= ViewWidth.SMALL_TABLET;
 
     return (
       <PopoutWrapper
@@ -277,5 +277,6 @@ class Alert extends React.Component<AlertProps, AlertState> {
 export default withPlatform(
   withAdaptivity(Alert, {
     viewWidth: true,
+    isDesktop: true,
   })
 );

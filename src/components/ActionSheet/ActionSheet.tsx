@@ -1,6 +1,5 @@
 import * as React from "react";
 import { PopoutWrapper } from "../PopoutWrapper/PopoutWrapper";
-import { ViewWidth, ViewHeight } from "../../hoc/withAdaptivity";
 import { IOS } from "../../lib/platform";
 import { ActionSheetDropdownDesktop } from "./ActionSheetDropdownDesktop";
 import { ActionSheetDropdown } from "./ActionSheetDropdown";
@@ -64,10 +63,7 @@ export const ActionSheet: React.FC<ActionSheetProps> = ({
     warn("can't close on outer click without onClose");
   }
 
-  const { viewWidth, viewHeight, hasMouse } = useAdaptivity();
-  const isDesktop =
-    viewWidth >= ViewWidth.SMALL_TABLET &&
-    (hasMouse || viewHeight >= ViewHeight.MEDIUM);
+  const { isDesktop } = useAdaptivity();
 
   let timeout = platform === IOS ? 300 : 200;
 

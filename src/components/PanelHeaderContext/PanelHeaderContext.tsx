@@ -2,7 +2,6 @@ import * as React from "react";
 import FixedLayout from "../FixedLayout/FixedLayout";
 import { classNames } from "../../lib/classNames";
 import { getClassName } from "../../helpers/getClassName";
-import { ViewWidth } from "../AdaptivityProvider/AdaptivityContext";
 import { useAdaptivity } from "../../hooks/useAdaptivity";
 import { useDOM } from "../../lib/dom";
 import { useIsomorphicLayoutEffect } from "../../lib/useIsomorphicLayoutEffect";
@@ -27,8 +26,7 @@ export const PanelHeaderContext: React.FC<PanelHeaderContextProps> = ({
   const platform = usePlatform();
   const [visible, setVisible] = React.useState(opened);
   const closing = visible && !opened;
-  const { viewWidth } = useAdaptivity();
-  const isDesktop = viewWidth >= ViewWidth.SMALL_TABLET;
+  const { isDesktop } = useAdaptivity();
   const elementRef = React.useRef<HTMLDivElement>();
 
   useIsomorphicLayoutEffect(() => {

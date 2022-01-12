@@ -9,7 +9,6 @@ import { usePlatform } from "../../hooks/usePlatform";
 import {
   withAdaptivity,
   AdaptivityProps,
-  ViewHeight,
   ViewWidth,
 } from "../../hoc/withAdaptivity";
 import ModalDismissButton from "../ModalDismissButton/ModalDismissButton";
@@ -49,6 +48,7 @@ const ModalPage: React.FC<ModalPageProps> = (props: ModalPageProps) => {
     viewWidth,
     viewHeight,
     sizeX,
+    isDesktop,
     hasMouse,
     onClose,
     settlingHeight,
@@ -62,9 +62,6 @@ const ModalPage: React.FC<ModalPageProps> = (props: ModalPageProps) => {
     updateModalHeight();
   }, [children]);
 
-  const isDesktop =
-    viewWidth >= ViewWidth.SMALL_TABLET &&
-    (hasMouse || viewHeight >= ViewHeight.MEDIUM);
   const canShowCloseBtn = viewWidth >= ViewWidth.SMALL_TABLET;
 
   const modalContext = React.useContext(ModalRootContext);
@@ -113,7 +110,6 @@ ModalPage.defaultProps = {
 
 export default withAdaptivity(ModalPage, {
   viewWidth: true,
-  viewHeight: true,
+  isDesktop: true,
   sizeX: true,
-  hasMouse: true,
 });

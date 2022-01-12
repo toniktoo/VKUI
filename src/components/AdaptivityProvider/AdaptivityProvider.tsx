@@ -42,8 +42,15 @@ export default function AdaptivityProvider(props: AdaptivityProviderProps) {
         window.innerHeight,
         props
       );
-      const { viewWidth, viewHeight, sizeX, sizeY, hasMouse, deviceHasHover } =
-        adaptivityRef.current;
+      const {
+        viewWidth,
+        viewHeight,
+        sizeX,
+        sizeY,
+        hasMouse,
+        deviceHasHover,
+        isDesktop,
+      } = adaptivityRef.current;
 
       if (
         viewWidth !== calculated.viewWidth ||
@@ -51,7 +58,8 @@ export default function AdaptivityProvider(props: AdaptivityProviderProps) {
         sizeX !== calculated.sizeX ||
         sizeY !== calculated.sizeY ||
         hasMouse !== calculated.hasMouse ||
-        deviceHasHover !== calculated.deviceHasHover
+        deviceHasHover !== calculated.deviceHasHover ||
+        isDesktop !== calculated.isDesktop
       ) {
         adaptivityRef.current = calculated;
         updateAdaptivity({});
@@ -85,8 +93,8 @@ function calculateAdaptivity(
   windowHeight: number,
   props: AdaptivityProviderProps
 ) {
-  let viewWidth = ViewWidth.SMALL_MOBILE;
-  let viewHeight = ViewHeight.SMALL;
+  let viewWidth;
+  let viewHeight;
   let sizeY = SizeType.REGULAR;
   let sizeX = SizeType.REGULAR;
   let hasMouse = props.hasMouse ?? _hasMouse;
@@ -129,5 +137,17 @@ function calculateAdaptivity(
   props.sizeX && (sizeX = props.sizeX);
   props.sizeY && (sizeY = props.sizeY);
 
-  return { viewWidth, viewHeight, sizeX, sizeY, hasMouse, deviceHasHover };
+  const isDesktop =
+    viewWidth >= ViewWidth.SMALL_TABLET &&
+    (hasMouse || viewHeight >= ViewHeight.MEDIUM);
+
+  return {
+    viewWidth,
+    viewHeight,
+    sizeX,
+    sizeY,
+    hasMouse,
+    deviceHasHover,
+    isDesktop,
+  };
 }

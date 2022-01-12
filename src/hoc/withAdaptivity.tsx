@@ -17,6 +17,7 @@ interface Config {
   viewHeight?: boolean;
   hasMouse?: boolean;
   deviceHasHover?: boolean;
+  isDesktop?: boolean;
 }
 
 export function withAdaptivity<T>(TargetComponent: T, config: Config): T {
@@ -34,15 +35,9 @@ export function withAdaptivity<T>(TargetComponent: T, config: Config): T {
     const viewHeight = context.viewHeight;
     const hasMouse = context.hasMouse;
     const deviceHasHover = context.deviceHasHover;
+    const isDesktop = context.isDesktop;
 
-    const adaptivityProps: {
-      sizeX?: SizeType;
-      sizeY?: SizeType;
-      viewWidth?: ViewWidth;
-      viewHeight?: ViewHeight;
-      hasMouse?: boolean;
-      deviceHasHover?: boolean;
-    } = {};
+    const adaptivityProps: AdaptivityProps = {};
     config.sizeX ? (adaptivityProps.sizeX = sizeX) : undefined;
     config.sizeY ? (adaptivityProps.sizeY = sizeY) : undefined;
     config.viewWidth ? (adaptivityProps.viewWidth = viewWidth) : undefined;
@@ -51,6 +46,7 @@ export function withAdaptivity<T>(TargetComponent: T, config: Config): T {
     config.deviceHasHover
       ? (adaptivityProps.deviceHasHover = deviceHasHover)
       : undefined;
+    config.isDesktop ? (adaptivityProps.isDesktop = isDesktop) : undefined;
 
     // @ts-ignore
     const target = <TargetComponent {...props} {...adaptivityProps} />;

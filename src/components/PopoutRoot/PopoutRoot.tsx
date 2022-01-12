@@ -1,11 +1,6 @@
 import * as React from "react";
 import { HasRootRef } from "../../types";
-import {
-  withAdaptivity,
-  ViewWidth,
-  ViewHeight,
-  AdaptivityProps,
-} from "../../hoc/withAdaptivity";
+import { withAdaptivity, AdaptivityProps } from "../../hoc/withAdaptivity";
 import { AppRootPortal } from "../AppRoot/AppRootPortal";
 import { blurActiveElement, useDOM } from "../../lib/dom";
 import "./PopoutRoot.css";
@@ -21,21 +16,9 @@ export interface PopoutRootProps
 export const PopoutRootComponent: React.FC<PopoutRootProps> = (
   props: PopoutRootProps
 ) => {
-  const {
-    popout,
-    modal,
-    viewWidth,
-    viewHeight,
-    hasMouse,
-    children,
-    getRootRef,
-    ...restProps
-  } = props;
+  const { popout, modal, isDesktop, children, getRootRef, ...restProps } =
+    props;
   const { document } = useDOM();
-
-  const isDesktop =
-    viewWidth >= ViewWidth.SMALL_TABLET &&
-    (hasMouse || viewHeight >= ViewHeight.MEDIUM);
 
   React.useEffect(() => {
     popout && blurActiveElement(document);
@@ -63,7 +46,5 @@ export const PopoutRootComponent: React.FC<PopoutRootProps> = (
 PopoutRootComponent.displayName = "PopoutRoot";
 
 export const PopoutRoot = withAdaptivity(PopoutRootComponent, {
-  viewWidth: true,
-  viewHeight: true,
-  hasMouse: true,
+  isDesktop: true,
 });

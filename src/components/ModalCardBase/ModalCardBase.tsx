@@ -7,7 +7,6 @@ import { getClassName } from "../../helpers/getClassName";
 import { usePlatform } from "../../hooks/usePlatform";
 import {
   AdaptivityProps,
-  ViewHeight,
   ViewWidth,
   withAdaptivity,
 } from "../../hoc/withAdaptivity";
@@ -62,16 +61,12 @@ export const ModalCardBase: React.FC<ModalCardBaseProps> = withAdaptivity(
     children,
     actions,
     actionsLayout,
+    isDesktop,
     viewWidth,
-    hasMouse,
-    viewHeight,
     onClose,
     ...restProps
   }: ModalCardBaseProps & AdaptivityProps) => {
     const platform = usePlatform();
-    const isDesktop =
-      viewWidth >= ViewWidth.SMALL_TABLET &&
-      (hasMouse || viewHeight >= ViewHeight.MEDIUM);
     const isSoftwareKeyboardOpened = useKeyboard().isOpened;
 
     const canShowCloseBtn = viewWidth >= ViewWidth.SMALL_TABLET;
@@ -132,8 +127,7 @@ export const ModalCardBase: React.FC<ModalCardBaseProps> = withAdaptivity(
     );
   },
   {
+    isDesktop: true,
     viewWidth: true,
-    viewHeight: true,
-    hasMouse: true,
   }
 );

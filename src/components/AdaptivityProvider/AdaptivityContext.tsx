@@ -42,6 +42,10 @@ export interface AdaptivityProps extends SizeProps {
    * @ignore
    */
   deviceHasHover?: boolean;
+  /**
+   * @ignore
+   */
+  isDesktop?: boolean;
 }
 
 export interface AdaptivityContextInterface extends SizeProps {
@@ -49,6 +53,7 @@ export interface AdaptivityContextInterface extends SizeProps {
   viewHeight?: ViewHeight;
   hasMouse?: boolean;
   deviceHasHover?: boolean;
+  isDesktop?: boolean;
 }
 
 export const AdaptivityContext =
