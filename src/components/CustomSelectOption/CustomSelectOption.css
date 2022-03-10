@@ -48,6 +48,9 @@
   align-items: center;
 }
 
+.CustomSelectOption__afterIn {
+}
+
 .CustomSelectOption__description {
   color: var(--text_secondary);
   text-overflow: ellipsis;

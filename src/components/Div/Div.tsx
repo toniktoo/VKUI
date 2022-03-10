@@ -1,8 +1,15 @@
 import * as React from "react";
-import { getClassName } from "../../helpers/getClassName";
+import { classNamesString } from "../../lib/classNames";
+import { ANDROID, IOS, VKCOM } from "../../lib/platform";
 import { usePlatform } from "../../hooks/usePlatform";
 import { HasRootRef } from "../../types";
-import "./Div.css";
+import styles from "./Div.module.css";
+
+const platformClasses: Record<string, string> = {
+  [ANDROID]: styles["Div--android"],
+  [IOS]: styles["Div--ios"],
+  [VKCOM]: styles["Div--vkcom"],
+};
 
 export interface DivProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -11,6 +18,7 @@ export interface DivProps
 export const Div: React.FunctionComponent<DivProps> = ({
   children,
   getRootRef,
+  className,
   ...restProps
 }: DivProps) => {
   const platform = usePlatform();
@@ -18,7 +26,11 @@ export const Div: React.FunctionComponent<DivProps> = ({
     <div
       {...restProps}
       ref={getRootRef}
-      vkuiClass={getClassName("Div", platform)}
+      className={classNamesString(
+        styles.Div,
+        platformClasses[platform],
+        className
+      )}
     >
       {children}
     </div>

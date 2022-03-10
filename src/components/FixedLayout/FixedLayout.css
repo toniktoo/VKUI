@@ -25,3 +25,6 @@
 .Epic .FixedLayout--bottom {
   padding-bottom: calc(var(--tabbar_height) + var(--safe-area-inset-bottom));
 }
+
+.FixedLayout__in {
+}

@@ -13,6 +13,12 @@
   animation: vkui-popper-fadein 0.2s ease;
 }
 
+.TextTooltip__header {
+}
+
+.TextTooltip__text {
+}
+
 .TextTooltip__arrow {
   color: rgba(44, 45, 46, 0.88);
 }

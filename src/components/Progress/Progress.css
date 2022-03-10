@@ -10,3 +10,6 @@
   transition: width 0.2s ease;
   background: var(--accent);
 }
+
+.Progress__bg {
+}

@@ -17,6 +17,9 @@
   text-overflow: ellipsis;
 }
 
+.HorizontalCell__title {
+}
+
 .HorizontalCell__subtitle {
   color: var(--text_secondary);
   line-height: 18px;

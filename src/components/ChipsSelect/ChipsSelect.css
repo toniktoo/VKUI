@@ -6,6 +6,9 @@
   padding: 12px 0;
 }
 
+.ChipsSelect__options {
+}
+
 .ChipsSelect__empty {
   text-align: center;
   color: var(--text_secondary);

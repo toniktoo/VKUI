@@ -3,9 +3,8 @@ import mitt from "mitt";
 import { noop } from "@vkontakte/vkjs";
 import { Touch, TouchEvent, TouchProps } from "../Touch/Touch";
 import TouchRootContext from "../Touch/TouchContext";
-import { classNames } from "../../lib/classNames";
-import { getClassName } from "../../helpers/getClassName";
-import { ANDROID } from "../../lib/platform";
+import { classNamesString } from "../../lib/classNames";
+import { ANDROID, IOS, VKCOM } from "../../lib/platform";
 import { getOffsetRect } from "../../lib/offset";
 import { coordX, coordY } from "../../lib/touch";
 import { HasComponent, HasRootRef } from "../../types";
@@ -18,7 +17,9 @@ import { useExternRef } from "../../hooks/useExternRef";
 import { usePlatform } from "../../hooks/usePlatform";
 import { useFocusVisible } from "../../hooks/useFocusVisible";
 import { callMultiple } from "../../lib/callMultiple";
-import "./Tappable.css";
+import styles from "./Tappable.module.css";
+
+type StateMode = "opacity" | "background";
 
 export interface TappableProps
   extends Omit<
@@ -52,11 +53,11 @@ export interface TappableProps
   /**
    * Стиль подсветки active-состояния. Если передать произвольную строку, она добавится как css-класс во время active
    */
-  activeMode?: "opacity" | "background" | string;
+  activeMode?: StateMode | string;
   /**
    * Стиль подсветки hover-состояния. Если передать произвольную строку, она добавится как css-класс во время hover
    */
-  hoverMode?: "opacity" | "background" | string;
+  hoverMode?: StateMode | string;
   /**
    * Стиль аутлайна focus visible. Если передать произвольную строку, она добавится как css-класс во время focus-visible
    */
@@ -142,6 +143,39 @@ function useActivity(hasActive: boolean, stopDelay: number) {
   return [activity, { delayStart, start, stop }] as const;
 }
 
+function isPresetStateMode(
+  stateMode: StateMode | string
+): stateMode is StateMode {
+  switch (stateMode) {
+    case "opacity":
+    case "background":
+      return true;
+    default:
+      return false;
+  }
+}
+
+const platformClasses: Record<string, string> = {
+  [ANDROID]: styles["Tappable--android"],
+  [IOS]: styles["Tappable--ios"],
+  [VKCOM]: styles["Tappable--vkcom"],
+};
+
+const sizeXClasses = {
+  compact: styles["Tappable--sizeX-compact"],
+  regular: "",
+};
+
+const hoverModeClasses = {
+  background: styles["Tappable--hover-background"],
+  opacity: styles["Tappable--hover-opacity"],
+};
+
+const activeModeClasses = {
+  background: styles["Tappable--active-background"],
+  opacity: styles["Tappable--active-opacity"],
+};
+
 const Tappable: React.FC<TappableProps> = ({
   children,
   Component,
@@ -158,6 +192,7 @@ const Tappable: React.FC<TappableProps> = ({
   hasActive: _hasActive = true,
   activeMode = "background",
   focusVisibleMode = "inside",
+  className,
   ...props
 }: TappableProps) => {
   Component = Component || ((props.href ? "a" : "div") as React.ElementType);
@@ -176,8 +211,6 @@ const Tappable: React.FC<TappableProps> = ({
   const hasHover = deviceHasHover && _hasHover && !childHover;
   const isCustomElement =
     Component !== "a" && Component !== "button" && !props.contentEditable;
-  const isPresetHoverMode = ["opacity", "background"].includes(hoverMode);
-  const isPresetActiveMode = ["opacity", "background"].includes(activeMode);
   const isPresetFocusVisibleMode = ["inside", "outside"].includes(
     focusVisibleMode
   );
@@ -252,21 +285,22 @@ const Tappable: React.FC<TappableProps> = ({
     stop(activeDuraion >= 100 ? 0 : activeEffectDelay - activeDuraion);
   }
 
-  const classes = classNames(
-    getClassName("Tappable", platform),
-    `Tappable--sizeX-${sizeX}`,
-    hasHover && hovered && !isPresetHoverMode && hoverMode,
-    hasActive && active && !isPresetActiveMode && activeMode,
+  const classes = classNamesString(
+    className,
+    styles.Tappable,
+    platformClasses[platform],
+    sizeX && sizeXClasses[sizeX],
+    hasHover &&
+      hovered &&
+      (isPresetStateMode(hoverMode) ? hoverModeClasses[hoverMode] : hoverMode),
+    hasActive &&
+      active &&
+      (isPresetStateMode(activeMode)
+        ? activeModeClasses[activeMode]
+        : activeMode),
     focusVisible && !isPresetFocusVisibleMode && focusVisibleMode,
-    {
-      "Tappable--active": hasActive && active,
-      "Tappable--mouse": hasMouse,
-      [`Tappable--hover-${hoverMode}`]:
-        hasHover && hovered && isPresetHoverMode,
-      [`Tappable--active-${activeMode}`]:
-        hasActive && active && isPresetActiveMode,
-      "Tappable--focus-visible": focusVisible,
-    }
+    hasMouse && styles["Tappable--mouse"],
+    focusVisible && styles["Tappable--focus-visible"]
   );
 
   const handlers: RootComponentProps = {
@@ -290,7 +324,7 @@ const Tappable: React.FC<TappableProps> = ({
       {...props}
       slideThreshold={20}
       usePointerHover
-      vkuiClass={classes}
+      className={classes}
       Component={Component}
       getRootRef={containerRef}
       onBlur={callMultiple(onBlur, props.onBlur)}
@@ -304,7 +338,7 @@ const Tappable: React.FC<TappableProps> = ({
         !hasMouse &&
         hasActive &&
         activeMode === "background" && (
-          <span aria-hidden="true" vkuiClass="Tappable__waves">
+          <span aria-hidden="true" className={styles.Tappable__waves}>
             {clicks.map((wave) => (
               <Wave
                 {...wave}
@@ -317,7 +351,7 @@ const Tappable: React.FC<TappableProps> = ({
           </span>
         )}
       {hasHover && hoverMode === "background" && (
-        <span aria-hidden="true" vkuiClass="Tappable__hoverShadow" />
+        <span aria-hidden="true" className={styles.Tappable__hoverShadow} />
       )}
       {!props.disabled && isPresetFocusVisibleMode && (
         <FocusVisible mode={focusVisibleMode as FocusVisibleMode} />
@@ -336,5 +370,5 @@ export default withAdaptivity(Tappable, {
 function Wave({ x, y, onClear }: Wave & { onClear: VoidFunction }) {
   const timeout = useTimeout(onClear, 225);
   React.useEffect(() => timeout.set(), [timeout]);
-  return <span vkuiClass="Tappable__wave" style={{ top: y, left: x }} />;
+  return <span className={styles.Tappable__wave} style={{ top: y, left: x }} />;
 }

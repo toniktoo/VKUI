@@ -63,10 +63,26 @@ module.exports = {
         },
       },
     ],
+    [
+      require.resolve("babel-plugin-css-modules-transform"),
+      {
+        mode: "pure",
+        camelCase: false,
+        extensions: [".module.css"],
+        generateScopedName: "vkui[local]",
+        keepImport: keepCss,
+        devMode: false,
+      },
+    ],
   ].concat(
     keepCss
       ? []
-      : [["babel-plugin-transform-remove-imports", { test: "\\.css$" }]]
+      : [
+          [
+            "babel-plugin-transform-remove-imports",
+            { test: /^(?!.*module\.css$).*\.css$/ },
+          ],
+        ]
   ),
   ignore: ["./src/vkui.js"].concat(isProduction ? testFiles : []),
 };

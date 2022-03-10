@@ -114,3 +114,6 @@
 .Panel.Panel--regular::after {
   background-color: transparent;
 }
+
+.Panel__fade {
+}

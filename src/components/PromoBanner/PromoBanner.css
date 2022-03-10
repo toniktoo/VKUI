@@ -15,6 +15,9 @@
   color: var(--text_secondary);
 }
 
+.PromoBanner__label {
+}
+
 .PromoBanner__age {
   margin-left: 6px;
 }

@@ -46,8 +46,34 @@ const config = {
       },
       {
         test: /\.css$/,
-        exclude: /styleguide/,
+        exclude: /styleguide|\.module\.css$/,
         use: [styleLoader, "css-loader", "postcss-loader"],
+      },
+      {
+        test: /\.css$/,
+        include: /\.module\.css$/,
+        use: [
+          styleLoader,
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: {
+                mode: "pure",
+                localIdentName: "vkui[local]",
+                exportLocalsConvention: "asIs",
+              },
+            },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                isSandbox: true,
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,

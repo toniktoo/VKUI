@@ -1,7 +1,7 @@
 import * as React from "react";
-import { classNames } from "../../lib/classNames";
+import { classNamesString } from "../../lib/classNames";
 import type { HasRootRef } from "../../types";
-import "./ButtonGroup.css";
+import styles from "./ButtonGroup.module.css";
 
 export interface ButtonGroupProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -22,21 +22,35 @@ export interface ButtonGroupProps
   stretched?: boolean;
 }
 
+const modeClasses = {
+  horizontal: styles["ButtonGroup--mode-horizontal"],
+  vertical: styles["ButtonGroup--mode-vertical"],
+};
+
+const gapClasses = {
+  none: "",
+  space: styles["ButtonGroup--gap-space"],
+  s: styles["ButtonGroup--gap-s"],
+  m: styles["ButtonGroup--gap-m"],
+};
+
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({
   mode = "horizontal",
   gap = "m",
   stretched = false,
   getRootRef,
+  className,
   children,
   ...restProps
 }) => {
   return (
     <div
-      vkuiClass={classNames(
-        "ButtonGroup",
-        `ButtonGroup--mode-${mode}`,
-        gap !== "none" && `ButtonGroup--gap-${gap}`,
-        stretched && "ButtonGroup--stretched"
+      className={classNamesString(
+        className,
+        styles.ButtonGroup,
+        modeClasses[mode],
+        gapClasses[gap],
+        stretched && styles["ButtonGroup--stretched"]
       )}
       role="group"
       ref={getRootRef}

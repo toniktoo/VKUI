@@ -1,5 +1,5 @@
 import * as React from "react";
-import { classNames } from "../../lib/classNames";
+import { classNamesString } from "../../lib/classNames";
 import { ConfigProviderContext } from "../ConfigProvider/ConfigProviderContext";
 import Tappable, { TappableProps } from "../Tappable/Tappable";
 import Title from "../Typography/Title/Title";
@@ -16,7 +16,7 @@ import {
 import { PlatformType, IOS, VKCOM, ANDROID } from "../../lib/platform";
 import Spinner from "../Spinner/Spinner";
 import Headline from "../Typography/Headline/Headline";
-import "./Button.css";
+import styles from "./Button.module.css";
 
 export interface VKUIButtonProps extends HasAlign {
   /**
@@ -48,12 +48,53 @@ interface ButtonTypographyProps extends HasComponent {
   size: ButtonProps["size"];
   platform: PlatformType | undefined;
   sizeY: AdaptivityProps["sizeY"];
+  className?: string;
   children?: ButtonProps["children"];
 }
 
-const ButtonTypography: React.FC<ButtonTypographyProps> = (
-  props: ButtonTypographyProps
-) => {
+const sizeClasses = {
+  s: styles["Button--sz-s"],
+  m: styles["Button--sz-m"],
+  l: styles["Button--sz-l"],
+};
+
+const modeClasses = {
+  primary: styles["Button--lvl-primary"],
+  secondary: styles["Button--lvl-secondary"],
+  tertiary: styles["Button--lvl-tertiary"],
+  outline: styles["Button--lvl-outline"],
+
+  // Для обратной совместимости в CSS созданы все последующие классы:
+  //  FIXME удалить в 5.0.0
+  commerce: styles["Button--lvl-commerce"],
+  destructive: styles["Button--lvl-destructive"],
+  overlay_primary: styles["Button--lvl-overlay_primary"],
+  overlay_secondary: styles["Button--lvl-overlay_secondary"],
+  overlay_outline: styles["Button--lvl-overlay_outline"],
+};
+
+const appearanceClasses = {
+  accent: styles["Button--clr-accent"],
+  positive: styles["Button--clr-positive"],
+  negative: styles["Button--clr-negative"],
+  neutral: styles["Button--clr-neutral"],
+  overlay: styles["Button--clr-overlay"],
+};
+
+const alignClasses = {
+  left: styles["Button--aln-left"],
+  // Для обратной совместимости в CSS создан пустой класс:
+  center: styles["Button--aln-center"],
+  right: styles["Button--aln-right"],
+};
+
+const sizeYClasses = {
+  // Для обратной совместимости в CSS создан пустой класс:
+  compact: styles["Button--sizeY-compact"],
+  regular: styles["Button--sizeY-regular"],
+};
+
+const ButtonTypography: React.FC<ButtonTypographyProps> = (props) => {
   const { size, sizeY, platform, ...restProps } = props;
   const isCompact = sizeY === SizeType.COMPACT;
 
@@ -156,6 +197,7 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
     sizeY,
     Component = "button",
     loading,
+    className,
     onClick,
     ...restProps
   } = props;
@@ -172,40 +214,40 @@ const Button: React.FC<ButtonProps> = (props: ButtonProps) => {
       Component={restProps.href ? "a" : Component}
       onClick={loading ? undefined : onClick}
       focusVisibleMode="outside"
-      vkuiClass={classNames(
-        "Button",
-        `Button--sz-${size}`,
-        `Button--lvl-${resolvedMode}`,
-        `Button--clr-${resolvedAppearance}`,
-        `Button--aln-${align}`,
-        `Button--sizeY-${sizeY}`,
-        {
-          ["Button--stretched"]: stretched,
-          ["Button--with-icon"]: hasIcons,
-          ["Button--singleIcon"]: Boolean(
-            (!children && !after && before) || (!children && after && !before)
-          ),
-        }
+      className={classNamesString(
+        className,
+        styles.Button,
+        size && sizeClasses[size],
+        resolvedMode && modeClasses[resolvedMode],
+        resolvedAppearance && appearanceClasses[resolvedAppearance],
+        align && alignClasses[align],
+        sizeY && sizeYClasses[sizeY],
+        stretched && styles["Button--stretched"],
+        // Для обратной совместимости в CSS создан пустой класс:
+        hasIcons && styles["Button--with-icon"],
+        Boolean(
+          (!children && !after && before) || (!children && after && !before)
+        ) && styles["Button--singleIcon"]
       )}
       getRootRef={getRootRef}
-      hoverMode={hasNewTokens ? "Button--hover" : "background"}
-      activeMode={hasNewTokens ? "Button--active" : "opacity"}
+      hoverMode={hasNewTokens ? styles["Button--hover"] : "background"}
+      activeMode={hasNewTokens ? styles["Button--active"] : "opacity"}
     >
-      {loading && <Spinner size="small" vkuiClass="Button__spinner" />}
-      <span vkuiClass="Button__in">
-        {before && <span vkuiClass="Button__before">{before}</span>}
+      {loading && <Spinner size="small" vkuiClass={styles.Button__spinner} />}
+      <span vkuiClass={styles.Button__in}>
+        {before && <span className={styles.Button__before}>{before}</span>}
         {children && (
           <ButtonTypography
             size={size}
             sizeY={sizeY}
             platform={platform}
-            vkuiClass="Button__content"
+            className={styles.Button__content}
             Component="span"
           >
             {children}
           </ButtonTypography>
         )}
-        {after && <span vkuiClass="Button__after">{after}</span>}
+        {after && <span className={styles.Button__after}>{after}</span>}
       </span>
     </Tappable>
   );

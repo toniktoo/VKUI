@@ -22,3 +22,6 @@
 .ModalPageHeader .Icon--cancel_24 {
   color: var(--icon_secondary);
 }
+
+.ModalPageHeader__in {
+}
