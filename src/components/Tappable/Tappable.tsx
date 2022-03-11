@@ -299,6 +299,8 @@ const Tappable: React.FC<TappableProps> = ({
         ? activeModeClasses[activeMode]
         : activeMode),
     focusVisible && !isPresetFocusVisibleMode && focusVisibleMode,
+    // Для обратной совместимости и для тестов в CSS созданы пустой класс:
+    hasActive && active && styles["Tappable--active"],
     hasMouse && styles["Tappable--mouse"],
     focusVisible && styles["Tappable--focus-visible"]
   );

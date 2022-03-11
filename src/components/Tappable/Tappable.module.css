@@ -8,6 +8,9 @@
   cursor: default;
 }
 
+.Tappable--active {
+}
+
 .Tappable--focus-visible {
   outline: none;
 }
