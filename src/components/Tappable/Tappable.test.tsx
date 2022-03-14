@@ -193,7 +193,7 @@ describe("Tappable", () => {
     afterEach(() => jest.clearAllMocks());
     it("shows waves on android", () => {
       const waveCount = () =>
-        document.querySelectorAll(styles.Tappable__wave).length;
+        document.querySelectorAll(`.${styles.Tappable__wave}`).length;
       render(
         <AdaptivityProvider hasMouse={false}>
           <ConfigProvider platform={ANDROID}>
